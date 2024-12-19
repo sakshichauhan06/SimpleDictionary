@@ -17,14 +17,20 @@
             android:hint="Search word here"
             android:padding="12dp"
             android:layout_toLeftOf="@+id/search_btn"
+            android:background="@drawable/rounded_corner"
             android:id="@+id/search_field"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="54dp"
             android:layout_alignParentEnd="true"
             android:text="Search"
+            android:textSize="15sp"
             android:layout_marginStart="8dp"
+            app:backgroundTint="@color/primary_light"
+            app:strokeColor="@color/primary_dark"
+            app:strokeWidth="1dp"
+            app:cornerRadius="24dp"
             android:id="@+id/search_btn"/>
 
         <ProgressBar
