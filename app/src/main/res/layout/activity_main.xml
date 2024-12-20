@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -41,5 +42,27 @@
             android:id="@+id/progress_bar"/>
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Word"
+        android:textSize="30sp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:textColor="#1565C0"
+        android:id="@+id/word_textview"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/t e x t/"
+        android:textColor="@color/grey"
+        android:id="@+id/phonetic_text"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/meaning_recycler_view" />
 
 </LinearLayout>
