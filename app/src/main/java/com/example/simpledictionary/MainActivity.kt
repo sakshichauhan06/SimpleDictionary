@@ -8,6 +8,7 @@ import android.view.View
 import com.example.simpledictionary.databinding.ActivityMainBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,8 +31,16 @@ class MainActivity : AppCompatActivity() {
 //            Log.i("Response from API", response.body().toString())
             runOnUiThread {
                 setInProgress(false)
+                response.body()?.first()?.let {
+                    setUI(it)
+                }
             }
         }
+    }
+
+    private fun setUI(response: WordResult) {
+        binding.wordTextview.text = response.word
+        binding.phoneticText.text = response.phonetics?.find { !it.text.isNullOrEmpty() }?.text
     }
 
     private fun setInProgress(inProgress : Boolean) {
