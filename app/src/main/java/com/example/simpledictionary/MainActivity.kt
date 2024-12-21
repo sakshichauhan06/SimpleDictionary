@@ -1,8 +1,10 @@
 package com.example.simpledictionary
 
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.example.simpledictionary.databinding.ActivityMainBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,9 +24,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getMeaning(word : String) {
+        setInProgress(true)
         GlobalScope.launch {
             val response = RetrofitInstance.dictionaryApi.getMeaning(word)
-            Log.i("Response from API", response.body().toString())
+//            Log.i("Response from API", response.body().toString())
+            runOnUiThread {
+                setInProgress(false)
+            }
+        }
+    }
+
+    private fun setInProgress(inProgress : Boolean) {
+        if(inProgress) {
+            binding.searchBtn.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.searchBtn.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.INVISIBLE
         }
     }
 }
