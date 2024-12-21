@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.simpledictionary.databinding.ActivityMainBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -13,6 +15,7 @@ import okhttp3.Response
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
+    lateinit var adapter: MeaningAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -22,17 +25,30 @@ class MainActivity : AppCompatActivity() {
             val word = binding.searchField.text.toString()
             getMeaning(word)
         }
+
+        adapter = MeaningAdapter(emptyList())
+        binding.meaningRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.meaningRecyclerView.adapter = adapter
     }
 
     private fun getMeaning(word : String) {
         setInProgress(true)
         GlobalScope.launch {
-            val response = RetrofitInstance.dictionaryApi.getMeaning(word)
-//            Log.i("Response from API", response.body().toString())
-            runOnUiThread {
-                setInProgress(false)
-                response.body()?.first()?.let {
-                    setUI(it)
+            try {
+                val response = RetrofitInstance.dictionaryApi.getMeaning(word)
+                if(response.body()==null) {
+                    throw (Exception())
+                }
+                runOnUiThread {
+                    setInProgress(false)
+                    response.body()?.first()?.let {
+                        setUI(it)
+                    }
+                }
+            }catch (e : Exception) {
+                runOnUiThread{
+                    setInProgress(false)
+                    Toast.makeText(applicationContext, "Something went wrong", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -41,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUI(response: WordResult) {
         binding.wordTextview.text = response.word
         binding.phoneticText.text = response.phonetics?.find { !it.text.isNullOrEmpty() }?.text
+        adapter.updateNewData(response.meanings)
     }
 
     private fun setInProgress(inProgress : Boolean) {
